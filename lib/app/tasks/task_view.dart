@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/app/data/hive_data_storage.dart';
 import 'package:todo_app/app/providers/task_provider.dart';
 
 import '../model/task.dart';
@@ -33,34 +34,39 @@ class _TaskViewState extends State<TaskView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Consumer<TaskProvider>(
-        builder: (context, taskProvider, child) {
-          return Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: const MyAppBar(),
-            body: SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      TopTextWidget(task: widget.task),
-                      const BuildTextFieldAndDateTimePicker(),
-                      bottomButtons(
-                        context,
-                        widget.task,
-                        taskProvider.titleController!,
-                        taskProvider.subtitleController!,
-                      ),
-                    ],
+      child: Provider<TaskProvider>(
+        create: (_) {
+          return TaskProvider(HiveDataStorage());
+        },
+        child: Consumer<TaskProvider>(
+          builder: (context, taskProvider, child) {
+            return Scaffold(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              appBar: const MyAppBar(),
+              body: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TopTextWidget(task: widget.task),
+                        const BuildTextFieldAndDateTimePicker(),
+                        bottomButtons(
+                          context,
+                          widget.task,
+                          taskProvider.titleController!,
+                          taskProvider.subtitleController!,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

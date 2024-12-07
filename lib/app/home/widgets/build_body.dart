@@ -10,7 +10,6 @@ import '../../providers/app_theme_provider.dart';
 import '../../providers/home_provider.dart';
 import 'task_widget.dart';
 
-
 class BuildBody extends StatefulWidget {
   const BuildBody({super.key});
 
@@ -23,12 +22,13 @@ class _BuildBodyState extends State<BuildBody> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    
+
     return Consumer<HomeProvider>(
       builder: (context, homeProvider, child) {
         final tasks = homeProvider.tasks;
         final completedTasks = tasks.where((task) => task.status).length;
-        final double percent = tasks.isNotEmpty ? completedTasks / tasks.length : 0;
+        final double percent =
+            tasks.isNotEmpty ? completedTasks / tasks.length : 0;
 
         return Column(
           children: [

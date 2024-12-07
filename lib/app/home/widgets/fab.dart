@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/app/data/hive_data_storage.dart';
+import 'package:todo_app/app/providers/task_provider.dart';
 
 import '../../../core/utils/colors.dart';
-import '../../providers/home_provider.dart';
 import '../../tasks/task_view.dart';
 
 class Fab extends StatelessWidget {
@@ -18,7 +18,7 @@ class Fab extends StatelessWidget {
           context,
           CupertinoPageRoute(
             builder: (context) => ChangeNotifierProvider(
-              create: (context) => HomeProvider(HiveDataStorage()),
+              create: (context) => TaskProvider(HiveDataStorage()),
               child: const TaskView(
                 task: null,
               ),

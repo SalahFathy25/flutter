@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/app/providers/task_provider.dart';
 
 import '../../main.dart';
 import '../providers/home_provider.dart';
@@ -28,6 +29,7 @@ class _HomeViewState extends State<HomeView> with RouteAware {
 
   @override
   void didPopNext() {
+    // Provider.of<TaskProvider>(context, listen: false).loadTasks();
     Provider.of<HomeProvider>(context, listen: false).loadTasks();
   }
 

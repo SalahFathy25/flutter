@@ -3,10 +3,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/app/providers/app_theme_provider.dart';
+import 'package:todo_app/app/providers/task_provider.dart';
 
 import 'app/data/hive_data_storage.dart';
 import 'app/home/home_view.dart';
 import 'app/model/task.dart';
+import 'app/providers/home_provider.dart';
 
 final RouteObserver<Route> routeObserver = RouteObserver<Route>();
 
@@ -30,6 +32,8 @@ Future<void> main() async {
     debugPrint('Error initializing Hive: $e');
   }
 
+  Provider.debugCheckInvalidValueType = null;
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => AppThemeProvider(),
@@ -45,16 +49,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<AppThemeProvider>(context);
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Todo App',
-      navigatorObservers: [routeObserver],
-      themeMode: themeProvider.themeState == ThemeState.light
-          ? ThemeMode.light
-          : ThemeMode.dark,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      home: const HomeView(),
+    return ChangeNotifierProvider(
+      create: (_) => AppThemeProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Todo App',
+        navigatorObservers: [routeObserver],
+        themeMode: themeProvider.themeState == ThemeState.light
+            ? ThemeMode.light
+            : ThemeMode.dark,
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        home: MultiProvider(providers: [
+          ChangeNotifierProvider(
+              create: (_) => HomeProvider(HiveDataStorage())),
+          ChangeNotifierProvider(
+              create: (_) => TaskProvider(HiveDataStorage())),
+        ], child: const HomeView()),
+      ),
     );
   }
 }
